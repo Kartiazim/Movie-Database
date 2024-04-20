@@ -78,38 +78,50 @@ function movieDetailTemplate(respon) {
                                 </div>
             `;
 }
-
-document.querySelector(".searchButton").addEventListener("click", function () {
-  fetch(
-    `http://www.omdbapi.com/?apikey=8a3bed7e&s=${
-      document.querySelector(".input-key").value
-    }`
-  )
+function getMovie(data) {
+  return fetch(`http://www.omdbapi.com/?apikey=8a3bed7e&s=${data}`)
     .then((respon) => respon.json())
-    .then((respon) => {
-      const movie = respon.Search;
-      const movies = movie
-        .map((el) => {
-          return cardTemplate(el);
-        })
-        .join("");
+    .then((respon) => respon.Search);
+}
 
-      document.querySelector(".cards").innerHTML = movies;
+// document.querySelector(".searchButton").addEventListener("click", function () {
+//   fetch(
+//     `http://www.omdbapi.com/?apikey=8a3bed7e&s=${
+//       document.querySelector(".input-key").value
+//     }`
+//   )
+//     .then((respon) => respon.json())
+//     .then((respon) => {
+//       const movie = respon.Search;
+//       const movies = movie
+//         .map((el) => {
+//           return cardTemplate(el);
+//         })
+//         .join("");
 
-      document.querySelectorAll(".detail-button").forEach((el) => {
-        el.addEventListener("click", function () {
-          fetch(
-            `http://www.omdbapi.com/?apikey=8a3bed7e&i=${this.dataset.imdbid}`
-          )
-            .then((respon) => respon.json())
-            .then((respon) => {
-              const movieDetail = movieDetailTemplate(respon);
+//       document.querySelector(".cards").innerHTML = movies;
 
-              document.querySelector(".modal-body").innerHTML = movieDetail;
-            })
-            .catch((respon) => console.log(respon));
-        });
-      });
-    })
-    .catch((respon) => console.log(respon));
-});
+//       document.querySelectorAll(".detail-button").forEach((el) => {
+//         el.addEventListener("click", function () {
+//           fetch(
+//             `http://www.omdbapi.com/?apikey=8a3bed7e&i=${this.dataset.imdbid}`
+//           )
+//             .then((respon) => respon.json())
+//             .then((respon) => {
+//               const movieDetail = movieDetailTemplate(respon);
+
+//               document.querySelector(".modal-body").innerHTML = movieDetail;
+//             })
+//             .catch((respon) => console.log(respon));
+//         });
+//       });
+//     })
+//     .catch((respon) => console.log(respon));
+// });
+
+document
+  .querySelector(".searchButton")
+  .addEventListener("click", async function () {
+    const movie = await getMovie(document.querySelector(".input-key").value);
+    console.log(movie);
+  });
