@@ -51,7 +51,7 @@ function movieDetailTemplate(respon) {
 function getMovie(data) {
   return fetch(`http://www.omdbapi.com/?apikey=8a3bed7e&s=${data}`)
     .then((respon) => respon.json())
-    .then((respon) => respon.Search);
+    .then((respon) => respon.Search).catch((respon) => console.log(respon));
 }
 
 // fungsi untuk menampilkan cards
