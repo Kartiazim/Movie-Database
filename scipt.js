@@ -18,7 +18,7 @@ function cardTemplate(el) {
 // fungsi detail template
 function movieDetailTemplate(respon) {
   return `
-                              <div class="container-fluid">
+                            <div class="container-fluid">
                               <div class="row">
                               <div class="col-md-3">
                                       <img src="${respon.Poster}" class="img-fluid" />                                 
@@ -43,15 +43,26 @@ function movieDetailTemplate(respon) {
                                     </ul>
                                   </div>
                                 </div>
-                                </div>
+                               </div>
             `;
 }
 
 // fungsi fetch untuk data cards
 function getMovie(data) {
   return fetch(`http://www.omdbapi.com/?apikey=8a3bed7e&s=${data}`)
-    .then((respon) => respon.json())
-    .then((respon) => respon.Search).catch((respon) => console.log(respon));
+    .then((respon) => {
+      if (respon.status !== 200) {
+        throw new Error(respon.statusText);
+      } else {
+        return respon.json();
+      }
+    })
+    .then((respon) => {
+      if (respon.Response === "False") {
+        throw new Error(respon.Error);
+      }
+      return respon.Search;
+    });
 }
 
 // fungsi untuk menampilkan cards
@@ -76,8 +87,12 @@ function getDetail(imdbID) {
 document
   .querySelector(".searchButton")
   .addEventListener("click", async function () {
-    const movie = await getMovie(document.querySelector(".input-key").value);
-    showCards(movie);
+    try {
+      const movie = await getMovie(document.querySelector(".input-key").value);
+      showCards(movie);
+    } catch (err) {
+      document.querySelector(".cards").innerHTML = `<p>${err.message}</p>`;
+    }
   });
 
 document.addEventListener("click", function (e) {
